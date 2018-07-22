@@ -1,0 +1,31 @@
+extends layout.pug
+block content
+  div(class="row")
+    div(class="col-sm-12")
+      h1(id="title")
+      div(class="form-group")
+        label Amount
+        input(class="form-control" id="amount" placeholder="0.00")
+      div(class="form-group")
+        label Fees (percent)
+        input(class="form-control" id="percent_fee")
+      div(class="form-group")
+        label Fees (fixed)
+        input(class="form-control" id="fixed_fee")
+      div(class="form-group")
+        label Minimum Fee (fixed)
+        input(class="form-control" id="minimum_fee")
+      div(class="form-group")
+        div(class="alert alert-primary text-center")
+          h3
+            | Due: $
+            span(id="due") 0.00
+            |  | 
+            | Owed: $
+            span(id="owed") 0.00
+      div(class="form-group text-center")
+        button(class="btn btn-lg btn-primary" id="finalize") Finalize
+      div(class="form-group text-center" id="cancel")
+        a(href="./index.pug") Cancel Transaction and Return
+  script
+    include ../js/add_item.js

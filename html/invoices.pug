@@ -1,0 +1,12 @@
+extends layout.pug
+block content
+  hr(class="spacer")
+  div(class="row")
+    div(class="col-xs-12 text-right")
+      a(class="navlink" href="./index.pug") Back To Home
+  hr(class="spacer")
+  div(class="row")
+    div(class="col-sm-12")
+      ul(class="list-group" id="invoices")
+  script
+    include ../js/invoices.js

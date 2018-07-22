@@ -1,0 +1,15 @@
+extends layout.pug
+block content
+  hr(class="spacer")
+  div(class="row")
+    div(class="col-xs-12 text-right")
+      //a(class="navlink" href="./invoices.pug") History
+      //| |
+      a(class="navlink" href="./setup.pug") Settings
+      | |
+      a(class="navlink" href="./product.pug") New Product
+  hr(class="spacer")
+  div(class="row")
+    div(class="col-sm-12 text-center" id="start")
+  script
+    include ../js/index.js

@@ -1,0 +1,14 @@
+doctype html
+html
+  head
+    title FlexPOS
+    link(rel='stylesheet' href='../css/lib/bootstrap.min.css')
+    link(rel='stylesheet' href='../css/index.css')
+    script(type='text/javascript' src='../js/lib/jquery-2.1.4.min.js'  onload="window.$ = window.jQuery = module.exports;")
+    script(type='text/javascript' src="../js/globals.js")
+  body
+    div(class="container")
+      div(class="row")
+        div(class="col-sm-12")
+          block content
+  script(src="../renderer.js")

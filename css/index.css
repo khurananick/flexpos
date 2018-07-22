@@ -1,0 +1,10 @@
+.list-group-item {
+  border-bottom: 2px solid #ddd;
+}
+.navlink {
+  color: #fff;
+  padding:10px 5px;
+}
+.spacer {
+  margin-top:0px;
+}
