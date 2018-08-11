@@ -1,31 +1,150 @@
 extends layout.pug
 block content
   div(class="row")
-    div(class="col-sm-12")
+    div(class="col-xs-12")
       h1(id="title")
-      div(class="form-group")
-        label Amount
-        input(class="form-control" id="amount" placeholder="0.00")
-      div(class="form-group")
-        label Fees (percent)
-        input(class="form-control" id="percent_fee")
-      div(class="form-group")
-        label Fees (fixed)
-        input(class="form-control" id="fixed_fee")
-      div(class="form-group")
-        label Minimum Fee (fixed)
-        input(class="form-control" id="minimum_fee")
-      div(class="form-group")
-        div(class="alert alert-primary text-center")
-          h3
-            | Due: $
-            span(id="due") 0.00
-            |  | 
-            | Owed: $
-            span(id="owed") 0.00
-      div(class="form-group text-center")
-        button(class="btn btn-lg btn-primary" id="finalize") Finalize
-      div(class="form-group text-center" id="cancel")
-        a(href="./index.pug") Cancel Transaction and Return
-  script
-    include ../js/add_item.js
+      hr
+      div(class="text-right")
+        div(class="row")
+          div(class="col-xs-6")
+            h4 Amount
+          div(class="col-xs-6")
+            input(class="form-control" id="amount" autofocus="true" placeholder="0.00")
+        div(class="row")
+          div(class="col-xs-6")
+            h4 Fees (percent)
+          div(class="col-xs-6")
+            input(class="form-control" id="percent_fee")
+        div(class="row")
+          div(class="col-xs-6")
+            h4 Fees (fixed)
+          div(class="col-xs-6")
+            input(class="form-control" id="fixed_fee")
+        div(class="row")
+          div(class="col-xs-6")
+            h4 Minimum Fee (fixed)
+          div(class="col-xs-6")
+            input(class="form-control" id="minimum_fee")
+        div(class="row")
+          div(class="col-xs-6")
+            h4
+              | Total
+          div(class="col-xs-6")
+            h4
+              | $
+              span(id="total") 0.00
+      hr
+      div(class="row")
+        div(class="col-xs-12")
+          div(class="form-group text-center")
+            button(class="btn btn-primary" id="finalize") Add To Invoice
+          div(class="form-group text-center" id="cancel")
+            a(href="./index.pug") Cancel Transaction and Return
+  script.
+    var invoice_id = URLHelper.getGetParams.invoice_id;
+    var product_id = URLHelper.getGetParams.product_id;
+    var invoice = Invoice.find_or_init(invoice_id);
+    var product = Product.find(product_id);
+
+    (function() {
+      if(product.attrs.fixed_price) {
+        var item = {
+          product_id: product_id,
+          amount: product.attrs.fixed_price,
+          percent_fee: 0,
+          percent_total: 0,
+          fixed_total: product.attrs.fixed_price,
+          total_debit: product.attrs.fixed_price,
+          total_credit: 0
+        };
+        invoice.addChild(item);
+        document.location = '../html/invoice.pug?invoice_id='+invoice.id;
+        return;
+      }
+    })();
+
+    $(function() {
+      (function loadCancelLink() {
+        $("#cancel").html("<a href='../html/invoice.pug?invoice_id="+invoice_id+"'>Cancel And Return</a>");
+      })();
+
+      var amount  = $("#amount");
+      var pct_fee = $("#percent_fee");
+      var fxd_fee = $("#fixed_fee");
+      var min_fee = $("#minimum_fee");
+      var total_owed = $("#owed");
+      var total_due  = $("#due");
+      var total_span = $("#total");
+      var finalize = $("#finalize");
+
+      var percent_fee = 0;
+      var percent_total = 0;
+      var fixed_total = 0;
+      var minimum_total = 0;
+      var total_debit = 0;
+      var total_credit = 0;
+
+      var updateAmt = function(amount) {
+        var amt = parseFloat(amount);
+        var fee = 0;
+
+        if(pct_fee.val()) {
+          percent_fee = parseFloat(pct_fee.val()/100).toFixed(4);
+          percent_total = (amt * percent_fee);
+          fee += percent_total;
+        }
+
+        if(fxd_fee.val()) {
+          fixed_total = parseFloat(fxd_fee.val());
+          fee += fixed_total;
+        }
+
+        if(min_fee.val()) {
+          minimum_total = parseFloat(min_fee.val());
+          if(minimum_total > fee)
+            fee = minimum_total;
+        }
+
+        if(product.attrs.type === "debit") {
+          total_debit = (amt + fee).toFixed(2);
+          total_span.text(total_debit);
+        }
+        else {
+          total_credit = (amt - fee).toFixed(2);
+          total_span.text("("+total_credit+")");
+        }
+      };
+
+      amount.on("keyup", function(e) {
+        updateAmt(amount.val());
+      });
+      pct_fee.on("keyup", function(e) {
+        updateAmt(amount.val());
+      });
+      fxd_fee.on("keyup", function(e) {
+        updateAmt(amount.val());
+      });
+      min_fee.on("keyup", function(e) {
+        updateAmt(amount.val());
+      });
+      finalize.on("click", function(e) {
+        var item = {
+          product_id: product_id,
+          amount: amount.val(),
+          percent_fee: percent_fee,
+          percent_total: percent_total,
+          fixed_total: fixed_total,
+          total_debit: total_debit,
+          total_credit: total_credit
+        };
+        invoice.addChild(item);
+        document.location = '../html/invoice.pug?invoice_id='+invoice.id;
+      });
+
+      (function setDefaultValues() {
+        $("#title").text(product.attrs.name);
+        pct_fee.val(product.attrs.percent_fee||"0.00");
+        fxd_fee.val(product.attrs.fixed_fee||"0.00");
+        min_fee.val(product.attrs.minimum_fee||"0.00");
+      })();
+    });

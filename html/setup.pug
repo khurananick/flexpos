@@ -7,8 +7,35 @@ block content
     div(class="form-group")
       label Business Header
       textarea(class="form-control" id="header" rows="5")
+    div(class="form-group")
+      label Footer
+      textarea(class="form-control" id="footer" rows="2")
     div(class="form-group text-center")
       a(class="btn btn-default" href="./index.pug" id="cancel") Cancel
       button(class="btn btn-primary" id="save") Save
-  script
-    include ../js/setup.js
+  script.
+    $(function() {
+      var header = $("#header");
+      var footer = $("#footer");
+
+      $("#save").on("click", function () {
+        if(!header.val()) {
+          alert("Oops... header seems to be blank.");
+          return;
+        }
+        if(!footer.val()) {
+          alert("Oops... footer seems to be blank.");
+          return;
+        }
+        var values = { header: header.val(), footer: footer.val() };
+        DB.set("settings", values);
+        alert("Saved!");
+        document.location = "../html/index.pug";
+      });
+
+      var settings = DB.get("settings");
+      if(settings) {
+        header.text(settings.header);
+        footer.text(settings.footer);
+      }
+    });

@@ -29,8 +29,8 @@ var CrudModel = function(table) {
     },
     find_or_init: function(id) {
       index = id;
-      item = Item.find(id);
-      if(item) return item;
+      instance = Item.find(id);
+      if(instance) return instance;
       return Item.init({id: id});
     },
     init: function(params={}) {
@@ -41,9 +41,8 @@ var CrudModel = function(table) {
     },
     instance: function() {
       var Instance = {
-        parent: function() {
-          return item;
-        },
+        id: item.id,
+        attrs: item,
         addChild: function(child) {
           item.children.push(child);
           Instance.save();
@@ -55,7 +54,10 @@ var CrudModel = function(table) {
           return item.children[child_index];
         },
         getChildren: function() {
-          return item.children[child_index];
+          if(item)
+            return item.children;
+          else
+            return Self.attrs.children;
         },
         save: function() {
           var items = Item.all(table);
@@ -105,3 +107,41 @@ window.URLHelper = {
     return document.location.origin + document.location.pathname + "?" + str;
   }
 };
+
+// Number helpers.
+window.Num = {
+  asFloat: function(input) {
+    return parseFloat(parseFloat(input).toFixed(2));
+  }
+};
+
+// Global Listeners
+$(function() {
+  $(window).on("keypress", function(e) {
+    if(e.keyCode==113) {
+      document.location = "../html/index.pug";
+    } else {
+      if(!e.key.match(/[a-zA-Z]/)) return;
+      var href = $("#product"+e.key).attr("href");
+      if(href) document.location = href;
+    }
+  });
+});
+
+var loadProducts = function(invoice) {
+  var products = Product.all();
+  var new_container = $("#new");
+  var productHtml = function(product) {
+    var tkey = (product.trigger_key||product.id);
+    var html = "";
+    html +=  "<a id='product"+tkey+"' href='./add_item.pug?invoice_id="+invoice.id+"&product_id="+product.id+"' class='list-group-item'>";
+    html +=    "<p> ("+tkey+") "+product.name+"</p>";
+    html +=  "</a>";
+    return html;
+  };
+  for(var key in products) {
+    var product = products[key];
+    new_container.append(productHtml(product));
+  }
+};
+

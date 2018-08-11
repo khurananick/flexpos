@@ -19,6 +19,7 @@
   "devDependencies": {
     "electron": "^2.0.0",
     "electron-pug": "^2.0.0",
-    "electron-store":"^2.0.0"
+    "electron-store":"^2.0.0",
+    "node-thermal-printer": "^2.0.0"
   }
 }

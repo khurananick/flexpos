@@ -3,32 +3,58 @@ block content
   div
     h2 New Product
   hr
-  div
-    div(class="form-group")
-      label Name
-      input(class="form-control" id="name" placeholder="Bill Payment")
-    div(class="form-group")
-      label Type
-      select(class="form-control" id="type")
-        option(value="credit") Credit (checks, etc.)
-        option(value="debit") Debit (payments, money gram, etc.)
-    div(class="form-group")
-      label Fixed Fee
-      div(class="input-group")
-        span(class="input-group-addon") $
-        input(class="form-control" id="fixed_fee" placeholder="5.00")
-    div(class="form-group")
-      label Percent Fee
-      div(class="input-group")
-        span(class="input-group-addon") %
-        input(class="form-control" id="percent_fee" placeholder="1.4")
-    div(class="form-group")
-      label Minimum Flat Fee
-      div(class="input-group")
-        span(class="input-group-addon") $
-        input(class="form-control" id="minimum_fee" placeholder="3")
-    div(class="form-group text-center")
-      a(class="btn btn-default" href="./index.pug" id="cancel") Cancel
-      button(class="btn btn-primary" id="save") Save
+  div(class="row")
+    div(class="col-xs-6")
+      div(class="form-group")
+        label Name
+        input(class="form-control" id="name" placeholder="Bill Payment")
+    div(class="col-xs-6")
+      div(class="form-group")
+        label Type
+        select(class="form-control" id="type")
+          option(value="debit") Debit (payments, money gram, etc.)
+          option(value="credit") Credit (checks, etc.)
+  hr
+  div(class="row")
+    div(class="col-xs-10 col-xs-offset-1" style="border:2px solid #ddd; padding:20px;")
+      div(class="row")
+        div(class="col-xs-6 col-xs-offset-3")
+          div(class="form-group")
+            label Fixed Price
+            div(class="input-group")
+              span(class="input-group-addon") $
+              input(class="form-control" id="fixed_price" placeholder="0.80")
+      p(class="text-center") - or -
+      div(class="row")
+        div(class="col-xs-3")
+          div(class="form-group")
+            label Fixed Fee
+            div(class="input-group")
+              span(class="input-group-addon") $
+              input(class="form-control" id="fixed_fee" placeholder="5.00")
+        div(class="col-xs-3")
+          div(class="form-group")
+            label Percent Fee
+            div(class="input-group")
+              span(class="input-group-addon") %
+              input(class="form-control" id="percent_fee" placeholder="1.4")
+        div(class="col-xs-3")
+          div(class="form-group")
+            label Minimum Flat Fee
+            div(class="input-group")
+              span(class="input-group-addon") $
+              input(class="form-control" id="minimum_fee" placeholder="3")
+        div(class="col-xs-3")
+          div(class="form-group")
+            label Trigger Key
+            div(class="input-group")
+              span(class="input-group-addon") [K]
+              input(class="form-control" id="trigger_key" placeholder="B")
+  hr
+  div(class="row")
+    div(class="col-xs-12")
+      div(class="form-group text-center")
+        a(class="btn btn-default" href="./index.pug" id="cancel") Cancel
+        button(class="btn btn-primary" id="save") Save
   script
     include ../js/product.js

@@ -1,0 +1,31 @@
+doctype html
+html
+  head
+    title FlexPOS
+    script(type='text/javascript' src='../js/lib/jquery-2.1.4.min.js'  onload="window.$ = window.jQuery = module.exports;")
+    script(type='text/javascript' src="../js/globals.js")
+    style.
+      @page {
+        size: 70mm 140mm;
+        margin: 0;
+      }
+      @media print {
+        html, body {
+          width: 70mm;
+          height: 140mm;
+        }
+      }
+  body
+    div(id="header" style="text-align:center; white-space:pre-line;")
+    hr
+    div
+      table(id="existing" style="margin:0;width:100%;")
+    div
+      div(style="text-align:right;")
+        p
+          b Total: 
+          | $
+          span(id="total")
+    div(id="footer" style="padding-top:10px; text-align:center; white-space:pre-line;")
+    script
+      include ../js/invoice_printable.js
