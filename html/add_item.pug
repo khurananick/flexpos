@@ -90,7 +90,7 @@ block content
 
         if(pct_fee.val()) {
           percent_fee = parseFloat(pct_fee.val()/100).toFixed(4);
-          percent_total = (amt * percent_fee);
+          percent_total = parseFloat(Num.asFloat(amt * percent_fee));
           fee += percent_total;
         }
 

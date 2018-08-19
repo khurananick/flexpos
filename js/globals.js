@@ -6,6 +6,9 @@ var CrudModel = function(table) {
   var Item = {
     all: function() {
       var items = DB.get(table)||{};
+      for(var key in items) {
+        if(items[key].is_deleted) delete(items[key]);
+      }
       return items;
     },
     create: function(params={}) {
@@ -63,6 +66,12 @@ var CrudModel = function(table) {
           var items = Item.all(table);
           items[item.id] = item;
           DB.set(table, items);
+        },
+        destroy: function() {
+          item.is_deleted = true;
+          var items = Item.all(table);
+          items[item.id] = item;
+          DB.set(table, items);
         }
       };
       return Instance;
@@ -111,14 +120,18 @@ window.URLHelper = {
 // Number helpers.
 window.Num = {
   asFloat: function(input) {
-    return parseFloat(parseFloat(input).toFixed(2));
+    return parseFloat(parseFloat(input).toFixed(2)).toFixed(2);
   }
 };
 
 // Global Listeners
+window.$win = $(window);
 $(function() {
-  $(window).on("keypress", function(e) {
-    if(e.keyCode==113) {
+  let electron = require("electron");
+  $win.on("keypress", function(e) {
+    if(e.keyCode == 32 && event.shiftKey) {
+      electron.remote.getCurrentWindow().toggleDevTools();
+    } else if(e.keyCode==113) {
       document.location = "../html/index.pug";
     } else {
       if(!e.key.match(/[a-zA-Z]/)) return;
@@ -144,4 +157,3 @@ var loadProducts = function(invoice) {
     new_container.append(productHtml(product));
   }
 };
-

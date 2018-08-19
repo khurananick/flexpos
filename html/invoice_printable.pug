@@ -18,14 +18,32 @@ html
   body
     div(id="header" style="text-align:center; white-space:pre-line;")
     hr
+    div(style="text-align:center;")
+      span(id="date")
+    div(style="text-align:center;")
+      | Receipt ID: 
+      span(id="invoice_id")
+    div(style='clear:both;')
+    hr
     div
       table(id="existing" style="margin:0;width:100%;")
     div
-      div(style="text-align:right;")
-        p
-          b Total: 
+      div(style="text-align:right; padding-top:20px;")
+        span
+          | Total: 
           | $
           span(id="total")
+        br
+        span
+          | Cash Collected: 
+          | $
+          span(id="cash")
+        br
+        span
+          | Change Due: 
+          | $
+          span(id="change")
+    hr
     div(id="footer" style="padding-top:10px; text-align:center; white-space:pre-line;")
     script
       include ../js/invoice_printable.js
